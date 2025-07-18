@@ -5,21 +5,26 @@ from html2text import HTML2Text
 from pathlib import Path
 from urllib.parse import urlparse
 
-class Scraper:
-    limit = int(os.environ.get("SCRAPING_LIMIT") or 30)
-    subdomain = os.environ.get("SCRAPING_SOURCE_SUBDOMAIN") or "optisigns"
-    BASE_URL = f"https://support.{subdomain}.com/api/v2/help_center/en-us/articles.json?per_page={limit}"
-    def __init__(self, out_dir="data") -> None:
+class Scraper:    
+    def __init__(self) -> None:
+        self.limit = int(os.environ.get("SCRAPING_LIMIT") or 30)
+        self.subdomain = os.environ.get("SCRAPING_SOURCE_SUBDOMAIN") or "optisigns"
+        self.output_dir = os.environ.get("DATA_DIR") or "data"
         self.session = requests.Session()
-        self.out_dir = Path(out_dir)
-        self.out_dir.mkdir(parents=True, exist_ok=True)
+        self.output_dir_path = Path(self.output_dir)
+        self.output_dir_path.mkdir(parents=True, exist_ok=True)
+        
+    @property
+    def base_url(self) -> str:
+        """Zendesk url for fetching articles."""
+        return f"https://support.{self.subdomain}.com/api/v2/help_center/en-us/articles.json?per_page={self.limit}"
     
-    def fetch_articles(self, url=None):
+    def fetch_articles(self):
         """
         Fetch up to SCRAPING_LIMIT number of articles
         """
-        print(f"Fetching first {self.limit} articles from: {self.BASE_URL}")
-        res = self.session.get(self.BASE_URL)
+        print(f"Fetching first {self.limit} articles from: {self.base_url}")
+        res = self.session.get(self.base_url)
         res.raise_for_status()
         return res.json().get("articles", [])
             
@@ -60,7 +65,7 @@ class Scraper:
         html_url = article.get("html_url", "")
 
         slug = self.extract_slug_from_url(html_url)
-        filename = self.out_dir / f"{slug}.md"
+        filename = self.output_dir_path / f"{slug}.md"
 
         if (cleaned_article_content is not None):
             filename.write_text(cleaned_article_content, encoding="utf-8")
