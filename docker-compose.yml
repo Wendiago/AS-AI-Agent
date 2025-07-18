@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  optibot-job:
+    build: .
+    container_name: optibot-job
+    env_file:
+      - .env # Loads all environment variables
+    volumes:
+      - ./logs:/logs
+      - ./data:/data
+    restart: "no"
+    command: [ "python", "main.py" ]
