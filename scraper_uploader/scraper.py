@@ -4,15 +4,14 @@ import re
 from html2text import HTML2Text
 from pathlib import Path
 from urllib.parse import urlparse
+from common.env_config import config
 
 class Scraper:    
     def __init__(self) -> None:
-        self.limit = int(os.environ.get("SCRAPING_LIMIT") or 30)
-        self.subdomain = os.environ.get("SCRAPING_SOURCE_SUBDOMAIN") or "optisigns"
-        self.output_dir = os.environ.get("DATA_DIR") or "data"
+        self.limit = config.SCRAPING_LIMIT
+        self.subdomain = config.SCRAPING_SOURCE_SUBDOMAIN
+        self.output_dir = config.DATA_DIR
         self.session = requests.Session()
-        self.output_dir_path = Path(self.output_dir)
-        self.output_dir_path.mkdir(parents=True, exist_ok=True)
         
     @property
     def base_url(self) -> str:
@@ -65,7 +64,7 @@ class Scraper:
         html_url = article.get("html_url", "")
 
         slug = self.extract_slug_from_url(html_url)
-        filename = self.output_dir_path / f"{slug}.md"
+        filename = self.output_dir / f"{slug}.md"
 
         if (cleaned_article_content is not None):
             filename.write_text(cleaned_article_content, encoding="utf-8")

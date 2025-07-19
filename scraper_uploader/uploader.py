@@ -4,6 +4,7 @@ from datetime import timezone, datetime
 from pathlib import Path
 from typing import List, Optional, cast
 from common.openai_client import OpenAIClient
+from common.env_config import config
 
 class Uploader:
     def __init__(self, vector_store_id: Optional[str] = None, vector_store_name: Optional[str] = None):
@@ -14,12 +15,11 @@ class Uploader:
             vector_store_id: Existing vector store ID to use
             vector_store_name: Name for new vector store if vector_store_id is not provided
         """
-        self.data_dir = os.environ.get("DATA_DIR", "data") 
-        self.log_dir = os.environ.get("LOG_DIR", "logs") 
-        self.upload_log_dir = os.path.join(self.log_dir, "upload")
+        self.data_dir = config.DATA_DIR
+        self.upload_log_dir = config.LOG_DIR / "upload"
         
         # Initialize OpenAI client
-        self.openai_client = OpenAIClient(api_key=os.environ.get("OPENAI_API_KEY"))
+        self.openai_client = OpenAIClient(api_key=config.OPENAI_API_KEY)
         
         # Set up vector store
         self.vector_store_id = vector_store_id
