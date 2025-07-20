@@ -35,14 +35,7 @@ class Uploader:
         # Ensure directories exist
         Path(self.data_dir).mkdir(parents=True, exist_ok=True)
         Path(self.upload_log_dir).mkdir(parents=True, exist_ok=True)
-    
-    def get_markdown_files(self) -> List[Path]:
-        """
-        Get all markdown files from the data directory
-        """
-        data_path = Path(self.data_dir)
-        return list(data_path.glob("*.md"))
-    
+        
     def upload_files_to_vector_store(self, files: List[Path]) -> List[str]:
         """
         Upload files to the vector store
@@ -98,8 +91,3 @@ class Uploader:
         
         print(f"Upload complete: {uploaded_count} files uploaded.")
         print(f"Log written to {log_filename}")
-
-if __name__ == "__main__":
-    uploader = Uploader(vector_store_name="knowledge_base")
-    files = uploader.get_markdown_files()
-    uploader.upload_files_to_vector_store(files)

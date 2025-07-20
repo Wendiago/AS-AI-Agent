@@ -49,7 +49,14 @@ class OpenAIClient:
         try:
             vector_store_file = self.client.vector_stores.files.create(
                 vector_store_id=vector_store_id,
-                file_id=file_id
+                file_id=file_id,
+                chunking_strategy={
+                    "type": "static",
+                    "static": {
+                        "max_chunk_size_tokens": 1200,
+                        "chunk_overlap_tokens": 200
+                    }
+                }
             )
             return vector_store_file.id
         except Exception as e:
