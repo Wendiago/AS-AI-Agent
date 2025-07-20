@@ -78,10 +78,10 @@
 
 ## 4. Daily Job Log Screenshots
 
-- ![Cron Job History](./assets/CronJobHistory.PNG)  
-- ![Cron Job Log 1](./assets/CronJobLog1.PNG)  
-- ![Cron Job Log 2](./assets/CronJobLog2.PNG)  
-- ![Cron Job Log 3](./assets/CronJobLog3.PNG)  
+- ![Cron Job History](./assets/CronjobHistory.PNG)  
+- ![Cron Job Log 1](./assets/CronjobLog1.PNG)  
+- ![Cron Job Log 2](./assets/CronjobLog2.PNG)  
+- ![Cron Job Log 3](./assets/CronjobLog3.PNG)  
 
 ---
 
