@@ -23,8 +23,8 @@ class EnvConfig:
             self.BASE_PATH = Path('.')
         
         self.DATA_DIR = self.BASE_PATH / data_dir
-        self.LOG_DIR = self.BASE_PATH / log_dir
         self.HASHES_FILE = self.BASE_PATH / 'hashes.json'
+        self.LOG_DIR = Path('.') / log_dir
         
         # Ensure directories exist
         self.DATA_DIR.mkdir(exist_ok=True)

@@ -1,6 +1,5 @@
-import os
-import requests
-import re
+import requests, re, json
+from datetime import timezone, datetime
 from html2text import HTML2Text
 from pathlib import Path
 from urllib.parse import urlparse
@@ -74,6 +73,36 @@ class Scraper:
 
         print(f"Saved: {filename}")
         
+    def write_scraping_log(self, added: int, updated: int, skipped: int):
+        utc_now = datetime.now(timezone.utc)
+        scraping_log_dir = config.LOG_DIR / "scraping"
+        scraping_log_dir.mkdir(parents=True, exist_ok=True)
+        
+        log_filename = f"{utc_now.date()}.json"
+        log_file = scraping_log_dir / log_filename
+
+        # Load existing logs if file exists
+        logs = []
+        if log_file.exists():
+            with open(log_file, "r", encoding="utf-8") as f:
+                try:
+                    logs = json.load(f)
+                except json.JSONDecodeError:
+                    logs = []
+
+        # Append this run
+        logs.append({
+            "timestamp": utc_now.isoformat(),
+            "added": added,
+            "updated": updated,
+            "skipped": skipped,
+        })
+
+        with open(log_file, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=2)
+        
+        print(f"\nScraping results: {added} added, {updated} updated, {skipped} skipped")
+            
 if __name__ == "__main__":
     scraper = Scraper()
     scraper.fetch_articles()
